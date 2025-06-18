@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -23,11 +23,11 @@ function CalendarApp() {
   const [editEvent, setEditEvent] = useState(null);
 
   const handleSelectSlot = ({ start, end }) => {
-    setOpen(true);
-    setSelectedSlot({ start, end });
     setEditEvent(null);
     setCurrentEvent(null);
     setIsEdit(false);
+    setOpen(true);
+    setSelectedSlot({ start, end });
   };
 
   const handleClose = () => {
@@ -69,7 +69,7 @@ function CalendarApp() {
           startAccessor="start"
           endAccessor="end"
           selectable
-          popup
+          popup={false}
           onSelectSlot={handleSelectSlot}
           slotPropGetter={(date) => {
             const now = new Date();
@@ -94,34 +94,41 @@ function CalendarApp() {
                 }}
               >
                 <div>
-                  📌 <strong>{event.title}</strong>
-                  <br />
-                  {moment(event.start).format("hh:mm A")} -{" "}
-                  {moment(event.end).format("hh:mm A")}
-                  <br />
-                  <IconButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentEvent(event);
-                      setDeleteDialogOpen(true);
-                    }}
-                    color="error"
-                    aria-label="delete event"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsEdit(true);
-                      setEditEvent(event);
-                      setOpen(true);
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
+                    📌 <strong>{event.title}</strong>
+                    <Box sx={{display:"flex",gap:"2px"}}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentEvent(event);
+                          setDeleteDialogOpen(true);
+                        }}
+                        color="error"
+                        aria-label="delete event"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsEdit(true);
+                          setEditEvent(event);
+                          setOpen(true);
+                        }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                  
                 </div>
               </div>
             ),
